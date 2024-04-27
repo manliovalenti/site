@@ -72,10 +72,6 @@ p.text{
 }
 
 #content{
-/*  animation: fadein 1s;
-  -moz-animation: fadein 1s; /* Firefox 
-  -webkit-animation: fadein 1s; /* Safari and Chrome 
-  -o-animation: fadein 1s; /* Opera */
   background-color: #ffffff;
   margin: 50px 20px 50px 0;
   padding: 0px;
@@ -90,7 +86,6 @@ p.text{
 figure {
   display: inline-block;
 	float : right;
-  /* border: 1px dotted gray; */
   width : 270px;
   margin: 20px; /* adjust as needed */
 }

@@ -265,7 +265,7 @@ function format(data) {
                 ". \"" + title + ".\" " + 
                 ". In <em>" + booktitle + "<\/em>" +
                 ((data.pages) ? " (pp. " + data.pages + ")" : "") + 
-                "." +
+                ", " +
                 ((data.publisher) ? " " + data.publisher + ", ": "") +
                 year + ".";
         }
@@ -468,14 +468,19 @@ async function getThesis() {
 
 function addEntry(citation) {
 
-    let t = "<p style=\"display: inline\">"+ htmlify(format(citation)) + "<pre style=\"display: inline\">";
+    let t = "<p style=\"display: inline\">"+ htmlify(format(citation)) + "   <div style=\"margin-bottom: 7px;\"></div><pre style=\"display: inline;\">";
     if ( citation.hasOwnProperty("arxiv") ) {
         t += " <a href=\""+citation["arxiv"] +"\">arXiv</a>";
     }
 
-    if ( citation["entryType"] !== "unpublished" ) {
+    if ( citation["entryType"] !== "unpublished" &&  citation["entryType"] !== "inproceedings"  ) {
         t += " <a download=\""+ citation["cite"] +".bib\" href=\"data:application/octet-stream;charset=utf-8,"+ encodeURIComponent(citation["originalContent"]) + " \">bib</a>";
     }
+
+    if ( citation.hasOwnProperty("pdf") ) {
+        t += " <a href=\"pdf/"+citation["pdf"] +"\">pdf</a>";
+    }
+
     t += "</pre></p>";
 
    return t;
