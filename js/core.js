@@ -267,7 +267,7 @@ function format(data) {
                 ((data.series) ? ",&nbsp;" + data.series : "") + 
                 ((data.pages) ? "&nbsp;(pp. " + data.pages + ")" : "") + 
                 ((data.publisher) ? ",&nbsp;" + data.publisher : "") +
-                ",&nbsp;" + year  + "." +
+                ",&nbsp;" + year  +
                 ((data.doi && data.url) ? ", doi:&nbsp;<a href=\""+ data.url +"\">"+ data.doi + "</a>" : "");               
             }
         else if (formatValue == 'harvard') {
