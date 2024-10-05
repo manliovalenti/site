@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
 
 html, body {
-    margin: 0;
+    margin: 20px 0px 15px 20px;
     padding: 0;
     overflow-y: scroll;
 }
@@ -14,6 +14,10 @@ body {
   /* font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue; */
   font-size: 16px;
   margin:0;
+}
+
+div.paper_notes {
+  margin-left: 27px; 
 }
 
 a:link {
@@ -68,7 +72,7 @@ p.text{
 	overflow: hidden;
   position: relative;
   text-align: left;
-	width: 1200px;
+	width: 1100px;
 }
 
 #content{
@@ -129,7 +133,7 @@ dd {
 }
 
 
-@media screen and (max-width:1000px) {
+@media screen and (max-width:1080px) {
   #container { width: 100%;}
 }
 

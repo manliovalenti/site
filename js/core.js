@@ -199,7 +199,8 @@ function format(data) {
                 "&nbsp;(" + year + ")" + 
                 ((data.number) ? ", no.&nbsp;" + data.number : "") + 
                 ((data.pages) ? ",&nbsp;" + data.pages : "") +
-                ((data.doi && data.url) ? ", doi:&nbsp;<a href=\""+ data.url +"\">"+ data.doi + "</a>" : "") +                
+                ((data.doi && data.url) ? ", doi:&nbsp;<a href=\""+ data.url +"\">"+ data.doi + "</a>" : "") +
+                ((data.mrnumber) ? ", MR&nbsp"+data.mrnumber : "")+              
 //                ((data.doi) ? ", doi:&nbsp;" + data.doi : "") +                
                 ".";
         }
@@ -268,7 +269,9 @@ function format(data) {
                 ((data.pages) ? "&nbsp;(pp. " + data.pages + ")" : "") + 
                 ((data.publisher) ? ",&nbsp;" + data.publisher : "") +
                 ",&nbsp;" + year  +
-                ((data.doi && data.url) ? ", doi:&nbsp;<a href=\""+ data.url +"\">"+ data.doi + "</a>" : "");               
+                ((data.doi && data.url) ? ", doi:&nbsp;<a href=\""+ data.url +"\">"+ data.doi + "</a>" : "") + 
+                ((data.mrnumber) ? ", MR&nbsp"+data.mrnumber : "")+
+                "."
             }
         else if (formatValue == 'harvard') {
             return authors + 
@@ -436,6 +439,11 @@ function format(data) {
 }
 
 async function getThesis() {
+
+    (async() => {
+        while(typeof bibliography == "undefined")
+            await new Promise(resolve => setTimeout(resolve, 250));
+
     let contents = await fetch('bib/thesis.bib').then(response => response.text());
 
     // If empty, return nothing!
@@ -455,14 +463,19 @@ async function getThesis() {
     // Citation style: amslike
     let output = format(citation);
 
+    let SVFirstOrderPart = getIndex('SVFirstOrderPart')+1;
+    let MVRamsey = getIndex('MVRamsey')+1;
+
     thesis.innerHTML = '<b>Ph.D. Thesis: </b> A journey through computability, topology and analysis, 2021. </br>\
 		An abstract of the thesis has been published in <br><br>\
 		<p class="text">' +
             htmlify(output).substring(82,) +
         '</p>\
-		Most of the results in my thesis have been collected in the papers '+ getIndex('SVFirstOrderPart')+ ' to ' + getIndex('MVRamsey') + ', so please refer to the papers instead.';
+		Most of the results in my thesis have been collected in the papers '+ SVFirstOrderPart + ' to ' + MVRamsey + ', so please refer to the papers instead.';
     
     console.log(thesis.innerHTML);
+    
+    })();
 }
 
 
@@ -471,7 +484,7 @@ function addEntry(citation) {
 
     let t = "<p style=\"display: inline\">"+ htmlify(format(citation)) + "   <div style=\"margin-bottom: 7px;\"></div><pre style=\"display: inline;\">";
     if ( citation.hasOwnProperty("arxiv") ) {
-        t += " <a href=\""+citation["arxiv"] +"\">arXiv</a>";
+        t += "   <a href=\""+citation["arxiv"] +"\">arXiv</a>";
     }
 
     if ( citation["entryType"] !== "unpublished" &&  citation["entryType"] !== "inproceedings"  ) {
@@ -490,7 +503,7 @@ function addEntry(citation) {
 function getIndex(key) {
     for (let i in bibliography.data) 
         if (bibliography.data[i].cite == key) 
-            return parseInt(i)+1;
+            return parseInt(i);
 }
 
 
@@ -505,20 +518,40 @@ function getPapers() {
         var papers = document.getElementById("papers");
         papers.innerHTML = '';
 
+        papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("ALMMVJump")]) + "</li>";
+        papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("DSVTreeTheorem")]) + "</li>";
+        papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("CMVCantorBendixon")]) + "</li>";
+        papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("TVdP2022")]) + "</li>";
+
+        papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("GPVweaknessDS")]);
+        papers.innerHTML += "<div class=\"paper_notes\">This is an extended version of the <a href=\"pdf/GPVweaknessDSCiE.pdf\">homonymous paper</a>, published in " + htmlify(format(bibliography.data[getIndex("GPVweaknessDSCiE")])).substring(143,) + "<br><br></div></li>";
+        
+        papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("LMPMVMinimalCovers")]) + "</li>";
+
+        papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("SVFirstOrderPart")]) + "</li>";
+        papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("MVEffSalem")]) + "</li>";
+        papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("MVSalem")]) + "</li>";
+
+        papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("GPVDescSeq")]);
+        papers.innerHTML += '<div class=\"paper_notes\"><b>WARNING</b>: Please check the <b>errata</b> provided with the arxiv version.<br><br></div>'
+        papers.innerHTML += "</li>";
+
+        papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("MVRamsey")]) + "</li>";
+
         // For each parsed citation
-        for (let i in bibliography.data) {
+        // for (let i in bibliography.data) {
 
-            // Get citation
-            let citation = bibliography.data[i];
-            papers.innerHTML += "<li>" +  addEntry(citation) ;
+        //     // Get citation
+        //     let citation = bibliography.data[i];
+        //     papers.innerHTML += "<li>" +  addEntry(citation) ;
 
-            if (citation.cite == 'GPVDescSeq') {
-                papers.innerHTML += '<b>WARNING</b>: Please check the <b>errata</b> provided with the arxiv version.<br><br>'
-                // The published version of this paper contains the claim that $\\mathsf{DS} \\equiv_{\\mathrm{W}} \\mathsf{BS}$. This statement is false and the separation has been proved in '+getIndex('GPVweaknessDS') + '. Please check the <b>errata</b> provided with the arxiv version.  <br><br>';
-            }
+        //     if (citation.cite == 'GPVDescSeq') {
+        //         papers.innerHTML += '<b>WARNING</b>: Please check the <b>errata</b> provided with the arxiv version.<br><br>'
+        //         // The published version of this paper contains the claim that $\\mathsf{DS} \\equiv_{\\mathrm{W}} \\mathsf{BS}$. This statement is false and the separation has been proved in '+getIndex('GPVweaknessDS') + '. Please check the <b>errata</b> provided with the arxiv version.  <br><br>';
+        //     }
 
-            papers.innerHTML += "</li>";
-        }
+        //     papers.innerHTML += "</li>";
+        // }
         MathJax.typeset();
     })();
 }
