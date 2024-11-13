@@ -518,6 +518,7 @@ function getPapers() {
         var papers = document.getElementById("papers");
         papers.innerHTML = '';
 
+        papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("LMVChains")]) + "</li>";
         papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("ALMMVJump")]) + "</li>";
         papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("DSVTreeTheorem")]) + "</li>";
         papers.innerHTML += "<li>" +  addEntry(bibliography.data[getIndex("TVdP2022")]) + "</li>";
